@@ -4,35 +4,33 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ECommerce.Persistence.Configurations;
 
-public class OperationClaimConfiguration :IEntityTypeConfiguration<OperationClaim>
+public class OperationClaimConfiguration : IEntityTypeConfiguration<OperationClaim>
 {
     public void Configure(EntityTypeBuilder<OperationClaim> builder)
     {
-        builder.ToTable("OperationClaims").HasKey(c => c.Id);
-
-        builder.Property(oc => oc.Id).HasColumnName("Id").IsRequired();
-        builder.Property(oc => oc.Name).HasColumnName("Name").IsRequired();
+        builder.ToTable("OperationClaims").HasKey(x => x.Id);
+        builder.Property(x => x.Id).HasColumnName("Id").IsRequired();
+        builder.Property(x => x.Name).HasColumnName("Name").IsRequired();
         
-        builder.Property(a => a.CreatedDate).HasColumnName("CreatedDate");
-        builder.Property(a => a.UpdatedDate).HasColumnName("UpdatedDate");
-        builder.Property(a => a.DeletedDate).HasColumnName("DeletedDate");
+        builder.Property(u => u.CreatedDate).HasColumnName("CreatedDate").IsRequired();
+        builder.Property(u => u.UpdatedDate).HasColumnName("UpdatedDate");
+        builder.Property(u => u.DeletedDate).HasColumnName("DeletedDate");
 
-        builder.HasMany(oc => oc.UserOperationClaims)
-            .WithOne(uop => uop.OperationClaim)
-            .HasForeignKey(uop => uop.OperationClaimId)
-            .OnDelete(DeleteBehavior.NoAction);
+        builder.HasQueryFilter(oc => !oc.DeletedDate.HasValue);
+
 
         builder.HasData(getData());
     }
 
+
     private HashSet<OperationClaim> getData()
     {
-        HashSet<OperationClaim> operationClaims = new()
+        HashSet<OperationClaim> datas = new()
         {
             new OperationClaim { Id = 1, Name = "Admin" },
             new OperationClaim { Id = 2, Name = "User" },
-            new OperationClaim { Id = 3, Name = "MVP" },
+            new OperationClaim{Id = 3, Name = "Most Valueable People(MVP)"}
         };
-        return operationClaims;
+        return datas;
     }
 }

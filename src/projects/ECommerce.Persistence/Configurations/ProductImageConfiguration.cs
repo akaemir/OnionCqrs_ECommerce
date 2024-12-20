@@ -8,16 +8,17 @@ public class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage>
 {
     public void Configure(EntityTypeBuilder<ProductImage> builder)
     {
-        builder.ToTable("ProductImage").HasKey(pi => pi.Id);
-        builder.Property(pi => pi.Url).HasColumnName("Url").IsRequired();
-        builder.Property(pi => pi.CreatedDate).HasColumnName("CreatedDate");
-        builder.Property(pi => pi.UpdatedDate).HasColumnName("UpdatedDate");
-        builder.Property(pi => pi.DeletedDate).HasColumnName("DeletedDate");
-
-        builder
-            .HasOne(pi => pi.Product)
+        builder.ToTable("ProductImages").HasKey(i => i.Id);
+        builder.Property(i => i.Id).HasColumnName("Id").IsRequired();
+        builder.Property(i => i.ProductId).HasColumnName("ProductId").IsRequired();
+        builder.Property(i => i.Url).HasColumnName("Url").IsRequired();
+        builder.HasOne(i => i.Product)
             .WithMany(p => p.ProductImages)
-            .HasForeignKey(pi => pi.ProductId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(i => i.ProductId)
+            .OnDelete(DeleteBehavior.NoAction);
+        builder.HasQueryFilter(i => !i.DeletedDate.HasValue);
+
+
+        builder.Navigation(x => x.Product).AutoInclude();
     }
 }

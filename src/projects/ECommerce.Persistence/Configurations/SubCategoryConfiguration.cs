@@ -8,15 +8,18 @@ public class SubCategoryConfiguration : IEntityTypeConfiguration<SubCategory>
 {
     public void Configure(EntityTypeBuilder<SubCategory> builder)
     {
-        builder.ToTable("SubCategory").HasKey(sc => sc.Id);
-        builder.Property(sc => sc.Name).HasColumnName("Name");
-        builder.Property(sc => sc.CreatedDate).HasColumnName("CreatedDate");
-        builder.Property(sc => sc.UpdatedDate).HasColumnName("UpdatedDate");
-        builder.Property(sc => sc.DeletedDate).HasColumnName("DeletedDate");
-
-        builder.HasOne(sc => sc.Category)
+        builder.ToTable("SubCategories").HasKey(s => s.Id);
+        builder.Property(s => s.Id).HasColumnName("Id").IsRequired();
+        builder.Property(s => s.Name).HasColumnName("Name").IsRequired();
+        builder.Property(s => s.CategoryId).HasColumnName("CategoryId").IsRequired();
+        builder.HasOne(s => s.Category)
             .WithMany(c => c.SubCategories)
-            .HasForeignKey(sc => sc.CategoryId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasForeignKey(s => s.CategoryId)
+            .OnDelete(DeleteBehavior.NoAction);
+        builder.HasMany(s => s.Products)
+            .WithOne(p => p.SubCategory)
+            .HasForeignKey(p => p.SubCategoryId)
+            .OnDelete(DeleteBehavior.NoAction);
+        builder.HasQueryFilter(s => !s.DeletedDate.HasValue);
     }
 }

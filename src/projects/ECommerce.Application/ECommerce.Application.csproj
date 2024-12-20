@@ -13,8 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Auth\Queries\" />
     <Folder Include="Features\Categories\Commands\Update\" />
-    <Folder Include="Features\Products\" />
+    <Folder Include="Features\ProductImages\Costants\" />
+    <Folder Include="Features\ProductImages\Rules\" />
+    <Folder Include="Features\Products\Constants\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,17 +8,13 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder)
     {
-        builder.ToTable("Category").HasKey(x=>x.Id);
-        builder.Property(x=>x.Id).HasColumnName("CategoryId");
-        builder.Property(x=>x.Name).HasColumnName("Name");
-        builder.Property(x=>x.CreatedDate).HasColumnName("CreatedDate");
-        builder.Property(x=>x.UpdatedDate).HasColumnName("UpdatedDate");
-        builder.Property(x=>x.DeletedDate).HasColumnName("DeletedDate");
-        
-        builder
-            .HasMany(x=>x.SubCategories)
-            .WithOne(c=>c.Category)
-            .HasForeignKey(c=>c.CategoryId)
-            .OnDelete(deleteBehavior:DeleteBehavior.NoAction);
+        builder.ToTable("Categories").HasKey(c => c.Id);
+        builder.Property(c => c.Id).HasColumnName("Id").IsRequired();
+        builder.Property(c => c.Name).HasColumnName("Name").IsRequired();
+        builder.HasMany(c => c.SubCategories)
+            .WithOne(s => s.Category)
+            .HasForeignKey(s => s.CategoryId)
+            .OnDelete(DeleteBehavior.NoAction);
+        builder.HasQueryFilter(c => !c.DeletedDate.HasValue);
     }
 }
